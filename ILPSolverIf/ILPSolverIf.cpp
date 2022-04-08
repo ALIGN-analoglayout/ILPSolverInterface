@@ -73,7 +73,6 @@ int ILPSolverIf::solve(const int num_threads)
     model.setMaximumSolutions(1000);
     model.setMaximumSavedSolutions(1000);
     if (_t > 0) model.setMaximumSeconds(_t);
-    //model.setNumberHeuristics(0);
     if (num_threads > 1 && CbcModel::haveMultiThreadSupport()) {
       model.setNumberThreads(num_threads);
       if (_t > 0) model.setMaximumSeconds(_t * num_threads);
