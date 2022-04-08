@@ -6,7 +6,7 @@ enum class SOLVER_ENUM {Cbc, SYMPHONY};
 class ILPSolverIf {
   private:
     SOLVER_ENUM _se;
-    int _t;
+    int _t, _nvar, _nrow;
     void* _solver;
     double *_sol;
 
@@ -25,6 +25,6 @@ class ILPSolverIf {
 
     int solve(const int num_threads = 1);
     double *solution() { return _sol; }
-
+    void writelp(char* filename, char **varnames = nullptr, char **colnames = nullptr);
 };
 #endif

@@ -3,7 +3,7 @@
 #include "CbcModel.hpp"
 #include "symphony.h"
 
-ILPSolverIf::ILPSolverIf(const SOLVER_ENUM& se) : _se(se), _t{-1}, _sol{nullptr}
+ILPSolverIf::ILPSolverIf(const SOLVER_ENUM& se) : _se(se), _t{-1}, _nvar{0}, _nrow{0}, _sol{nullptr}
 {
   if (se == SOLVER_ENUM::Cbc) {
     _solver = new OsiClpSolverInterface;
@@ -36,6 +36,8 @@ void ILPSolverIf::loadProblem(const int nvar, const int nrow, const int* starts,
 {
   if (_solver) {
     if (_se == SOLVER_ENUM::Cbc) {
+      _nvar = nvar;
+      _nrow = nrow;
       auto sl = static_cast<OsiClpSolverInterface*>(_solver);
       sl->loadProblem(nvar, nrow, starts, indices,
           values, varlb, varub, obj, rowlb, rowub);
@@ -54,6 +56,8 @@ void ILPSolverIf::loadProblemSym(int nvar, int nrow, int* start,
 {
   if (_solver) {
     if (_se == SOLVER_ENUM::SYMPHONY) {
+      _nvar = nvar;
+      _nrow = nrow;
       auto sl = static_cast<sym_environment*>(_solver);
       sym_explicit_load_problem(sl,
           nvar, nrow, start, indices,
@@ -103,4 +107,19 @@ int ILPSolverIf::solve(const int num_threads)
     }
   }
   return status;
+}
+
+
+void ILPSolverIf::writelp(char *filename, char **varnames, char **colnames)
+{
+  if (_se == SOLVER_ENUM::Cbc) {
+    auto osiclp = static_cast<OsiClpSolverInterface*>(_solver);
+    if (varnames) for (int i = 0; i < _nvar; ++i) osiclp->setColName(i, varnames[i]);
+    if (colnames) for (int i = 0; i < _nrow; ++i) osiclp->setRowName(i, colnames[i]);
+    osiclp->writeLp(filename);
+  } else {
+    auto sl = static_cast<sym_environment*>(_solver);
+    if (varnames) sym_set_col_names(sl, varnames);
+    sym_write_lp(sl, filename);
+  }
 }
