@@ -11,12 +11,6 @@ set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 set(CMAKE_SKIP_BUILD_RPATH FALSE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 
-if(DEFINED ENV{MAX_JOBS})
-  message(STATUS "Limiting maximum number of compile jobs to $ENV{MAX_JOBS}")
-  set_property(GLOBAL APPEND PROPERTY JOB_POOLS compile_pool=$ENV{MAX_JOBS})
-  set(CMAKE_JOB_POOL_COMPILE compile_pool)
-endif()
-
 include(FetchContent)
 include(ILPSolverIf/cbc.cmake)
 include(ILPSolverIf/symphony.cmake)
