@@ -96,6 +96,7 @@ int ILPSolverIf::solve(const int num_threads)
     auto sl = static_cast<sym_environment*>(_solver);
     sym_solve(sl);
     status = sym_get_status(sl);
+    if (_t > 0) sym_set_int_param(sl, "time_limit", _t);
     if (status == TM_OPTIMAL_SOLUTION_FOUND || status == TM_FOUND_FIRST_FEASIBLE)  {
       status = 0;
       int n{0};
