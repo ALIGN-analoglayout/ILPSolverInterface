@@ -27,7 +27,7 @@ jobs:
         rdir=`pwd`
         mkdir build && cd build
         apt update && apt install sudo
-        sudo apt-get install coinor-libcbc-dev coinor-libsymphony-dev
+        sudo apt-get install -y coinor-libcbc-dev coinor-libsymphony-dev
         cmake -DCMAKE_INSTALL_PREFIX:PATH=${rdir}/${{matrix.container[1]}} ..
         make -j4
         make install
