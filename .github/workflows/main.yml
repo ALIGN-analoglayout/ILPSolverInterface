@@ -23,11 +23,21 @@ jobs:
       with:
         ref: master
     - name: make ILPSolverIf
+      if: matrix.container[1] == 'manylinux_2_24_x86_64'
       run: |
         rdir=`pwd`
         mkdir build && cd build
         apt-get update && apt-get install -y sudo
         sudo apt-get install -y coinor-libcbc-dev coinor-libsymphony-dev
+        cmake -DCMAKE_INSTALL_PREFIX:PATH=${rdir}/${{matrix.container[1]}} ..
+        make -j4
+        make install
+        cd -
+    - name: make ILPSolverIf
+      if: matrix.container[1] == 'manylinux2014_x86_64'
+      run: |
+        rdir=`pwd`
+        mkdir build && cd build
         cmake -DCMAKE_INSTALL_PREFIX:PATH=${rdir}/${{matrix.container[1]}} ..
         make -j4
         make install
