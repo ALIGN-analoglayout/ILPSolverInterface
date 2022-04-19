@@ -3,6 +3,9 @@
 #include "CbcModel.hpp"
 #include "symphony.h"
 
+#include <vector>
+#include <string>
+
 ILPSolverIf::ILPSolverIf(const SOLVER_ENUM& se) : _se(se), _t{-1}, _nvar{0}, _nrow{0}, _sol{nullptr}
 {
   if (se == SOLVER_ENUM::Cbc) {
@@ -68,7 +71,7 @@ void ILPSolverIf::loadProblemSym(int nvar, int nrow, int* start,
   }
 }
 
-int ILPSolverIf::solve(const int num_threads)
+int ILPSolverIf::solve(const int num_threads, const double* initsol)
 {
   int status{0};
   if (_se == SOLVER_ENUM::Cbc) {
@@ -76,6 +79,14 @@ int ILPSolverIf::solve(const int num_threads)
     model.setLogLevel(0);
     model.setMaximumSolutions(1000);
     model.setMaximumSavedSolutions(1000);
+    if (initsol != nullptr) {
+      std::vector< std::pair<std::string, double> > initsolvec;
+      initsolvec.reserve(_nvar);
+      for (int i = 0; i < _nvar; ++i) {
+        initsolvec.push_back(std::make_pair("x" + std::to_string(i), initsol[i]));
+      }
+      model.setMIPStart(initsolvec);
+    }
     if (_t > 0) model.setMaximumSeconds(_t);
     if (num_threads > 1 && CbcModel::haveMultiThreadSupport()) {
       model.setNumberThreads(num_threads);
@@ -124,3 +135,4 @@ void ILPSolverIf::writelp(char *filename, char **varnames, char **colnames)
     sym_write_lp(sl, filename);
   }
 }
+

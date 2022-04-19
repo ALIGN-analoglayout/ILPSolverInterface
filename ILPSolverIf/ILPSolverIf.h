@@ -23,7 +23,7 @@ class ILPSolverIf {
         int* indices, double* values, double* varlb, double* varub,
         char *intvars, double* obj, char *sens, double *rhs); 
 
-    int solve(const int num_threads = 1);
+    int solve( const int num_threads = 1, const double* initsol = nullptr);
     double *solution() { return _sol; }
     void writelp(char* filename, char **varnames = nullptr, char **colnames = nullptr);
 };
