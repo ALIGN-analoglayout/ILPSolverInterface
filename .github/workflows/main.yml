@@ -30,29 +30,29 @@ jobs:
         git config --global user.name "srini229"
         git config --global user.email "rampras@umn.edu"
         git config --add safe.directory *  --global
-        git add -f ${{matrix.container[1]}}/lib/lib* ${{matrix.container}}/include/*
+        git add -f ${{matrix.container}}/lib/lib* ${{matrix.container}}/include/*
         git diff --staged --quiet || git commit -m "CI_WORKFLOW_COMMIT - upload libs and includes to ${{matrix.container}} [skip ci]"
         git branch
         git push
     - name: Push libs to git
       if: matrix.container == 'manylinux_2_24_x86_64'
       run: |
-        sleep 10
+        sleep 30
         git config --global user.name "srini229"
         git config --global user.email "rampras@umn.edu"
         git config --add safe.directory *  --global
-        git add -f ${{matrix.container[1]}}/lib/lib* ${{matrix.container}}/include/*
+        git add -f ${{matrix.container}}/lib/lib* ${{matrix.container}}/include/*
         git diff --staged --quiet || git commit -m "CI_WORKFLOW_COMMIT - upload libs and includes to ${{matrix.container}} [skip ci]"
         git branch
         git push
     - name: Push libs to git
       if: matrix.container == 'manylinux2014_x86_64'
       run: |
-        sleep 20
+        sleep 45
         git config --global user.name "srini229"
         git config --global user.email "rampras@umn.edu"
         git config --add safe.directory *  --global
-        git add -f ${{matrix.container[1]}}/lib/lib* ${{matrix.container}}/include/*
+        git add -f ${{matrix.container}}/lib/lib* ${{matrix.container}}/include/*
         git diff --staged --quiet || git commit -m "CI_WORKFLOW_COMMIT - upload libs and includes to ${{matrix.container}} [skip ci]"
         git branch
         git push
