@@ -8,46 +8,48 @@ jobs:
   build:
     strategy:
       matrix:
-        container: [['ubuntu-latest', 'manylinux_2_28_x86_64'], ['ubuntu-latest', 'manylinux_2_24_x86_64'], ['ubuntu-latest', 'manylinux2014_x86_64']]
-    runs-on: ${{matrix.container[0]}}
-    container: quay.io/pypa/${{matrix.container[1]}}
+        container: ['manylinux_2_28_x86_64', 'manylinux_2_24_x86_64', 'manylinux2014_x86_64']
+    runs-on: ubuntu-latest
+    container: quay.io/pypa/${{matrix.container}}
     steps:
     - name: Checkout
-      if: matrix.container[0] == 'ubuntu-latest'
       uses: actions/checkout@v2
-      with:
-        ref: master
-    - name: Checkout
-      if: matrix.container[0] == 'ubuntu-18.04'
-      uses: actions/checkout@v1
       with:
         ref: master
     - name: make ILPSolverIf
       run: |
         rdir=`pwd`
         mkdir build && cd build
-        cmake -DCMAKE_INSTALL_PREFIX:PATH=${rdir}/${{matrix.container[1]}} ..
+        cmake -DCMAKE_INSTALL_PREFIX:PATH=${rdir}/${{matrix.container}} ..
         make -j4
         make install
         cd -
     - name: Push libs to git
-      if: matrix.container[0] == 'ubuntu-latest'
+      if: matrix.container == 'manylinux_2_28_x86_64'
       run: |
         git config --global user.name "srini229"
         git config --global user.email "rampras@umn.edu"
-        git add -f ${{matrix.container[1]}}/lib/lib* ${{matrix.container[1]}}/include/*
+        git add -f ${{matrix.container[1]}}/lib/lib* ${{matrix.container}}/include/*
         git diff --staged --quiet || git commit -m "CI_WORKFLOW_COMMIT - upload libs and includes to ${{matrix.container}} [skip ci]"
         git branch
         git push
     - name: Push libs to git
-      if: matrix.container[0] == 'ubuntu-18.04'
+      if: matrix.container == 'manylinux_2_24_x86_64'
       run: |
+        sleep 10
         git config --global user.name "srini229"
         git config --global user.email "rampras@umn.edu"
-        git add -f ${{matrix.container[1]}}/lib/lib* ${{matrix.container[1]}}/include/*
+        git add -f ${{matrix.container[1]}}/lib/lib* ${{matrix.container}}/include/*
         git diff --staged --quiet || git commit -m "CI_WORKFLOW_COMMIT - upload libs and includes to ${{matrix.container}} [skip ci]"
         git branch
-        git branch tmpb
-        git checkout master
-        git merge tmpb
-        git push origin master
+        git push
+    - name: Push libs to git
+      if: matrix.container == 'manylinux2014_x86_64'
+      run: |
+        sleep 20
+        git config --global user.name "srini229"
+        git config --global user.email "rampras@umn.edu"
+        git add -f ${{matrix.container[1]}}/lib/lib* ${{matrix.container}}/include/*
+        git diff --staged --quiet || git commit -m "CI_WORKFLOW_COMMIT - upload libs and includes to ${{matrix.container}} [skip ci]"
+        git branch
+        git push
