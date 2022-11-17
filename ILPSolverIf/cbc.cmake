@@ -15,7 +15,7 @@ if(NOT cbc_POPULATED)
   include(ExternalProject)
   ExternalProject_Add(cbc
       SOURCE_DIR ${cbc_SOURCE_DIR}
-      CONFIGURE_COMMAND ${cbc_SOURCE_DIR}/configure --enable-cbc-parallel --enable-openmp --disable-zlib --disable-bzlib --without-blas --without-lapack --enable-static --enable-shared --with-pic --prefix=${cbc_BINARY_DIR}
+      CONFIGURE_COMMAND ${cbc_SOURCE_DIR}/configure --enable-cbc-parallel --enable-openmp --disable-zlib --disable-bzlib --without-blas --without-lapack --enable-static --enable-shared --enable-relocatable --with-pic --prefix=${cbc_BINARY_DIR}
       BUILD_BYPRODUCTS ${cbc_BINARY_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}Cgl${CMAKE_STATIC_LIBRARY_SUFFIX} 
         ${cbc_BINARY_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}Clp${CMAKE_STATIC_LIBRARY_SUFFIX} 
         ${cbc_BINARY_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}Cbc${CMAKE_STATIC_LIBRARY_SUFFIX} 
