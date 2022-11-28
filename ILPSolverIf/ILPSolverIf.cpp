@@ -3,7 +3,7 @@
 #include "CbcModel.hpp"
 #include "symphony.h"
 
-ILPSolverIf::ILPSolverIf(const SOLVER_ENUM& se) : _se(se), _t{-1}, _nvar{0}, _nrow{0}, _sol{nullptr}
+ILPSolverIf::ILPSolverIf(const SOLVER_ENUM& se) : _se(se), _t{-1}, _nvar{0}, _nrow{0}, _numsols{0}, _sol{nullptr}, _sols{nullptr}
 {
   if (se == SOLVER_ENUM::Cbc) {
     _solver = new OsiClpSolverInterface;
@@ -22,6 +22,11 @@ ILPSolverIf::~ILPSolverIf()
   _solver = nullptr;
   delete[] _sol;
   _sol = nullptr;
+  for (int i = 0; i < _numsols; ++i) {
+    delete[] _sols[i];
+  }
+  delete[] _sols;
+  _sols = nullptr;
 }
 
 double ILPSolverIf::getInfinity() const
@@ -68,7 +73,7 @@ void ILPSolverIf::loadProblemSym(int nvar, int nrow, int* start,
   }
 }
 
-int ILPSolverIf::solve(const int num_threads)
+int ILPSolverIf::solve(const int num_threads, const int num_solutions)
 {
   int status{0};
   if (_se == SOLVER_ENUM::Cbc) {
@@ -76,6 +81,7 @@ int ILPSolverIf::solve(const int num_threads)
     model.setLogLevel(0);
     model.setMaximumSolutions(1000);
     model.setMaximumSavedSolutions(1000);
+    if (num_solutions > 1) model.setMaximumSavedSolutions(num_solutions);
     if (_t > 0) model.setMaximumSeconds(_t);
     if (num_threads > 1 && CbcModel::haveMultiThreadSupport()) {
       model.setNumberThreads(num_threads);
@@ -91,6 +97,21 @@ int ILPSolverIf::solve(const int num_threads)
     if (var) {
       _sol = new double[model.getNumCols()];
       for (int i = 0; i < model.getNumCols(); ++i) _sol[i] = var[i];
+    }
+    if (num_solutions > 1) {
+      _numsols = std::min(num_solutions, model.numberSavedSolutions());
+      if (_numsols > 0) {
+        _sols = new double*[_numsols];
+        if (_sols) {
+          for (int i = 0; i < _numsols; ++i) {
+            _sols[i] = new double[model.getNumCols()];
+            for (int j = 0; j < model.getNumCols(); ++j) {
+              const double *var = model.savedSolution(i);
+              _sols[i][j] = var[j];
+            }
+          }
+        }
+      }
     }
   } else {
     auto sl = static_cast<sym_environment*>(_solver);
