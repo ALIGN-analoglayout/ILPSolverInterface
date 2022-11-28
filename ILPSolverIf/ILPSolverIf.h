@@ -26,7 +26,11 @@ class ILPSolverIf {
 
     int solve(const int num_threads = 1, const int num_solutions = 1);
     double *solution() { return _sol; }
-    double **solutions() { return _sols; }
+    double **solutions(int& num_sols)
+    {
+      num_sols = _numsols;
+      return _sols;
+    }
     void writelp(char* filename, char **varnames = nullptr, char **colnames = nullptr);
 };
 #endif
