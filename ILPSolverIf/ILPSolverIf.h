@@ -1,7 +1,7 @@
 #ifndef _ILP_SOLVER_IF_H_
 #define _ILP_SOLVER_IF_H_
 
-enum class SOLVER_ENUM {Cbc, SYMPHONY};
+enum class SOLVER_ENUM {Cbc};
 
 class ILPSolverIf {
   private:
@@ -19,9 +19,6 @@ class ILPSolverIf {
     void loadProblem(const int nvar, const int nrow, const int* start,
         const int* indices, const double* values, const double* varlb, const double* varub,
         const double* obj, const double* rowlb, const double* rowub, const int* intvars = nullptr);
-    void loadProblemSym(int nvar, int nrow, int* start,
-        int* indices, double* values, double* varlb, double* varub,
-        char *intvars, double* obj, char *sens, double *rhs); 
 
     int solve(const int num_threads = 1);
     double *solution() { return _sol; }

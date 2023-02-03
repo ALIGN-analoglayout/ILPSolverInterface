@@ -13,7 +13,6 @@ set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 
 include(FetchContent)
 include(ILPSolverIf/cbc.cmake)
-include(ILPSolverIf/symphony.cmake)
 
 add_subdirectory(ILPSolverIf)
 install(TARGETS ILPSolverIf 
