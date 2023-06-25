@@ -1,7 +1,6 @@
 FetchContent_Declare(
   cbc
-  URL https://www.coin-or.org/download/source/Cbc/Cbc-2.10.5.tgz
-  URL_HASH MD5=46277180c0fc67f750e2de1836333189
+  URL https://raw.githubusercontent.com/ALIGN-analoglayout/ILPSolverInterface/feature/solver_local/solver_src/Cbc-2.10.5.tgz
 )
 include(ProcessorCount)
 ProcessorCount(N)

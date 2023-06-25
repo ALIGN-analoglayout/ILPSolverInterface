@@ -1,7 +1,6 @@
 FetchContent_Declare(
   symphony
-  URL https://www.coin-or.org/download/source/SYMPHONY/SYMPHONY-5.6.17.tgz
-  URL_HASH MD5=59fe0fa58c8bef019967766c86247b9d
+  URL https://raw.githubusercontent.com/ALIGN-analoglayout/ILPSolverInterface/feature/solver_local/solver_src/SYMPHONY-5.6.17.tgz
 )
 include(ProcessorCount)
 ProcessorCount(N)
