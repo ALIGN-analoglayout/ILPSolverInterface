@@ -12,7 +12,7 @@ set(CMAKE_SKIP_BUILD_RPATH FALSE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 
 include(FetchContent)
-#include(ILPSolverIf/cbc.cmake)
+include(ILPSolverIf/cbc.cmake)
 
 add_subdirectory(ILPSolverIf)
 install(TARGETS ILPSolverIf 
