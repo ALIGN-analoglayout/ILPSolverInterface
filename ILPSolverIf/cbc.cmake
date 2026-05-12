@@ -1,7 +1,7 @@
 FetchContent_Declare(
   cbc
-  URL https://www.coin-or.org/download/source/Cbc/Cbc-2.10.5.tgz
-  URL_HASH MD5=46277180c0fc67f750e2de1836333189
+  URL https://github.com/coin-or/Cbc/archive/refs/tags/releases/2.10.13.tar.gz
+  URL_HASH MD5=a5b877cd05ad5877c42d0f714e37812d
 )
 include(ProcessorCount)
 ProcessorCount(N)

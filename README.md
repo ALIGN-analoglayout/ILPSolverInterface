@@ -1,4 +1,4 @@
-* Repo to build Cbc/SYMPHONY solver libraries using github workflow
+* Repo to build Cbc solver libraries using github workflow
 * Currently built platforms : manylinux_2_24_x86_64 and manylinux2014_x86_64
 * This repo helps reduce build time of [ALIGN](https://github.com/ALIGN-analoglayout/ALIGN-public).
 * Build instruction:

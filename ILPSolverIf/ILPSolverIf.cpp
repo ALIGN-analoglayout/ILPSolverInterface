@@ -1,15 +1,15 @@
 #include "ILPSolverIf.h"
-#include "OsiClpSolverInterface.hpp"
-#include "CbcModel.hpp"
+#include <coin/OsiCbcSolverInterface.hpp>
+#include <coin/CbcModel.hpp>
 
 ILPSolverIf::ILPSolverIf() : _t{-1}, _nvar{0}, _nrow{0}, _sol{nullptr}
 {
-  _solver = new OsiClpSolverInterface;
+  _solver = new OsiCbcSolverInterface;
 }
 
 ILPSolverIf::~ILPSolverIf()
 {
-  delete static_cast<OsiClpSolverInterface*>(_solver);
+  delete static_cast<OsiCbcSolverInterface*>(_solver);
   _solver = nullptr;
   delete[] _sol;
   _sol = nullptr;
@@ -17,7 +17,7 @@ ILPSolverIf::~ILPSolverIf()
 
 double ILPSolverIf::getInfinity() const
 {
-  return static_cast<OsiClpSolverInterface*>(_solver)->getInfinity();
+  return static_cast<OsiCbcSolverInterface*>(_solver)->getInfinity();
 }
 
 void ILPSolverIf::loadProblem(const int nvar, const int nrow, const int* starts,
@@ -27,7 +27,7 @@ void ILPSolverIf::loadProblem(const int nvar, const int nrow, const int* starts,
   if (_solver) {
     _nvar = nvar;
     _nrow = nrow;
-    auto sl = static_cast<OsiClpSolverInterface*>(_solver);
+    auto sl = static_cast<OsiCbcSolverInterface*>(_solver);
     sl->loadProblem(nvar, nrow, starts, indices,
         values, varlb, varub, obj, rowlb, rowub);
     for (int i = 0; i < static_cast<int>(nvar); ++i) {
@@ -41,7 +41,7 @@ void ILPSolverIf::loadProblem(const int nvar, const int nrow, const int* starts,
 int ILPSolverIf::solve(const int num_threads)
 {
   int status{0};
-  CbcModel model(*static_cast<OsiClpSolverInterface*>(_solver));
+  CbcModel model(*static_cast<OsiCbcSolverInterface*>(_solver));
   model.setLogLevel(0);
   model.setMaximumSolutions(1000);
   model.setMaximumSavedSolutions(1000);
@@ -67,7 +67,7 @@ int ILPSolverIf::solve(const int num_threads)
 
 void ILPSolverIf::writelp(char *filename, char **varnames, char **colnames)
 {
-  auto osiclp = static_cast<OsiClpSolverInterface*>(_solver);
+  auto osiclp = static_cast<OsiCbcSolverInterface*>(_solver);
   if (varnames) for (int i = 0; i < _nvar; ++i) osiclp->setColName(i, varnames[i]);
   if (colnames) for (int i = 0; i < _nrow; ++i) osiclp->setRowName(i, colnames[i]);
   osiclp->writeLp(filename);
