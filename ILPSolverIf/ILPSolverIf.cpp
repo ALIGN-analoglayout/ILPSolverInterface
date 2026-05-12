@@ -1,6 +1,6 @@
 #include "ILPSolverIf.h"
-#include <coin/OsiCbcSolverInterface.hpp>
-#include <coin/CbcModel.hpp>
+#include "OsiClpSolverInterface.hpp"
+#include "CbcModel.hpp"
 
 ILPSolverIf::ILPSolverIf() : _t{-1}, _nvar{0}, _nrow{0}, _sol{nullptr}
 {
